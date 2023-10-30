@@ -32,7 +32,7 @@ object KJect {
      * @throws AlreadyInitializeException If KJect is already initialized.
      */
     @Throws(AlreadyInitializeException::class)
-    suspend fun CoroutineScope.launch(context: String = "production") = KJectImpl.launch(this, context)
+    suspend fun CoroutineScope.launch(context: String = "production"): Unit = KJectImpl.launch(this, context)
 
     /**
      * Disposes KJect.
@@ -40,7 +40,7 @@ object KJect {
      * @throws NotInitializeException If KJect is not initialized.
      */
     @Throws(NotInitializeException::class)
-    suspend fun dispose() = KJectImpl.dispose()
+    suspend fun dispose(): Unit = KJectImpl.dispose()
 
     /**
      * Gets an instance of the given [type].
@@ -53,7 +53,7 @@ object KJect {
      * @throws NotFoundException If no instance of the given [type] is in the registry.
      */
     @Throws(NotInitializeException::class, NotFoundException::class)
-    operator fun <T : Any> get(type: KClass<T>): T = TODO()
+    operator fun <T : Any> get(type: KClass<T>): T = KJectImpl[type]
 
     /**
      * @throws NotInitializeException If KJect is not initialized.
@@ -72,7 +72,7 @@ object KJect {
      * @see get
      */
     @Throws(NotInitializeException::class)
-    fun <T : Any> getOrNull(type: KClass<T>): T? = TODO()
+    fun <T : Any> getOrNull(type: KClass<T>): T? = KJectImpl.getOrNull(type)
 
     /**
      * @throws NotInitializeException If KJect is not initialized.
@@ -104,7 +104,7 @@ object KJect {
         CallCanceledException::class,
         CallFailedException::class,
     )
-    suspend fun <T : Any> getOrCreate(type: KClass<T>): T = TODO()
+    suspend fun <T : Any> getOrCreate(type: KClass<T>): T = KJectImpl.getOrCreate(type)
 
     /**
      * @throws NotInitializeException If KJect is not initialized.
@@ -173,7 +173,7 @@ object KJect {
         CallCanceledException::class,
         CallFailedException::class,
     )
-    suspend fun <T : Any> create(type: KClass<T>): T = TODO()
+    suspend fun <T : Any> create(type: KClass<T>): T = KJectImpl.create(type)
 
     /**
      * @throws NotInitializeException If KJect is not initialized.

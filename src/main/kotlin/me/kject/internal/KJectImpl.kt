@@ -3,8 +3,11 @@ package me.kject.internal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.exception.AlreadyInitializeException
+import me.kject.exception.NotFoundException
 import me.kject.exception.NotInitializeException
+import kotlin.reflect.KClass
 
 internal object KJectImpl {
 
@@ -47,5 +50,13 @@ internal object KJectImpl {
             _context = null
         }
     }
+
+    operator fun <T : Any> get(type: KClass<T>) = Registry[type] ?: throw NotFoundException(type)
+
+    fun <T : Any> getOrNull(type: KClass<T>) = Registry[type]
+
+    suspend fun <T : Any> getOrCreate(type: KClass<T>) = Registry[type] ?: Registry.create(type, DependencyTraceBuilder.create())
+
+    suspend fun <T : Any> create(type: KClass<T>) = Registry.create(type, DependencyTraceBuilder.create())
 
 }

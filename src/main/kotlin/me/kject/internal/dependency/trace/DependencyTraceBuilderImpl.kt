@@ -15,8 +15,6 @@ internal class DependencyTraceBuilderImpl : DependencyTraceBuilder {
     override fun add(element: DependencyTraceElement) {
         if (element is ClassElement) element.through = through
         elements += element
-
-        through = null
     }
 
     override fun removeLast() {
