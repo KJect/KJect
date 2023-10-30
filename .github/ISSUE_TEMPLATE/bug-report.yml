@@ -1,0 +1,62 @@
+name: Bugreport
+description: Report a bug to help us improve KJect
+labels:
+  - Status ✨ New
+  - Type 🐛 Bug
+assignees:
+  - CheeseTastisch
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug to us. 
+        Please fill out the following form to help us reproduce and fix the bug.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: |
+        Steps to reproduce the behavior:
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The version of KJect you are using.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+        label: Additional context
+        description: Add any other context about the problem here.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Pleas check the following boxes if you have done the following.
+      options:
+        - label: I have checked the documentation and checked that my issue is not expected behavior.
+          required: true
+        - label: I have search for [pull requests](https://github.com/CheeseTastisch/KJect/pulls) that might fix this issue.
+          required: true
+        - label: I have searched for [issues](https://github.com/CheeseTastisch/KJect/issues) that already describe this bug.
+          required: true
