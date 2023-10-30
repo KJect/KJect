@@ -1,4 +1,5 @@
 plugins {
+    `java-library`
     kotlin("jvm") version "1.9.10"
 }
 
@@ -10,6 +11,9 @@ repositories {
 }
 
 dependencies {
+    api(kotlin("refelect"))
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
     testImplementation(kotlin("test"))
 }
 
