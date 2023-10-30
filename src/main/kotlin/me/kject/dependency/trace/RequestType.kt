@@ -2,7 +2,7 @@ package me.kject.dependency.trace
 
 enum class RequestType(private val text: String) {
 
-    REQUEST("@Request"),
+    REQUIRE("@Require"),
 
     CONSTRUCTOR("constructor"),
 

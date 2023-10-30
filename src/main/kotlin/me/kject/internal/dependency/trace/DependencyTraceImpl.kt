@@ -1,5 +1,6 @@
 package me.kject.internal.dependency.trace
 
+import me.kject.dependency.trace.ClassElement
 import me.kject.dependency.trace.DependencyTrace
 import me.kject.dependency.trace.DependencyTraceElement
 import kotlin.reflect.KClass
@@ -32,7 +33,7 @@ class DependencyTraceImpl(override val elements: List<DependencyTraceElement>) :
             else append(" -> ")
 
             append(element)
-            if (duplicate in element.classes) append(" <- this is duplicate!")
+            if (element is ClassElement && duplicate == element.klass) append(" <- this is duplicate!")
 
             if (i != elements.lastIndex) appendLine()
         }

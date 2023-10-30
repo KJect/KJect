@@ -14,8 +14,6 @@ class ClassElement(val klass: KClass<*>) : DependencyTraceElement {
     var through: RequestType? = null
         internal set
 
-    override val classes = listOf(klass)
-
     override fun toString() = "$klass ${through?.let { "(through $it)" } ?: ""}"
 
 }

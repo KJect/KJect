@@ -1,6 +1,7 @@
 package me.kject.dependency.trace
 
 import me.kject.internal.dependency.trace.DependencyTraceBuilderImpl
+import kotlin.reflect.KClass
 
 /**
  * A [DependencyTraceBuilder] is a builder for a [DependencyTrace].
@@ -15,19 +16,29 @@ interface DependencyTraceBuilder {
     val elements: List<DependencyTraceElement>
 
     /**
+     * The classes currently in the [DependencyTrace].
+     */
+    val classes: List<KClass<*>>
+
+    /**
      * Sets through witch [RequestType] the next [DependencyTraceElement] is requested.
      */
-    fun through(requestType: RequestType)
+    infix fun through(requestType: RequestType)
 
     /**
      * Adds a [DependencyTraceElement] to this [DependencyTraceBuilder].
      */
-    fun add(element: DependencyTraceElement)
+    operator fun plusAssign(element: DependencyTraceElement)
+
+    /**
+     * Adds a [ClassElement] with the given [klass] to this [DependencyTraceBuilder].
+     */
+    operator fun plusAssign(klass: KClass<*>)
 
     /**
      * Removes the last [DependencyTraceElement] from this [DependencyTraceBuilder].
      */
-    fun removeLast()
+    operator fun unaryMinus()
 
     /**
      * Builds a [DependencyTrace] from this [DependencyTraceBuilder].

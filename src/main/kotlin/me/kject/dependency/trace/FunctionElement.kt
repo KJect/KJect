@@ -1,6 +1,5 @@
 package me.kject.dependency.trace
 
-import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
 /**
@@ -8,8 +7,6 @@ import kotlin.reflect.KFunction
  */
 @Suppress("MemberVisibilityCanBePrivate")
 class FunctionElement(val function: KFunction<*>) : DependencyTraceElement {
-
-    override val classes = emptyList<KClass<*>>()
 
     override fun toString() = function.toString()
 

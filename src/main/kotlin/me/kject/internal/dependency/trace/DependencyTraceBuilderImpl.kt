@@ -1,6 +1,7 @@
 package me.kject.internal.dependency.trace
 
 import me.kject.dependency.trace.*
+import kotlin.reflect.KClass
 
 internal class DependencyTraceBuilderImpl : DependencyTraceBuilder {
 
@@ -8,16 +9,22 @@ internal class DependencyTraceBuilderImpl : DependencyTraceBuilder {
 
     override val elements = mutableListOf<DependencyTraceElement>()
 
-    override fun through(requestType: RequestType) {
+    override val classes = elements.filterIsInstance<ClassElement>().map { it.klass }
+
+    override infix fun through(requestType: RequestType) {
         through = requestType
     }
 
-    override fun add(element: DependencyTraceElement) {
+    override operator fun plusAssign(element: DependencyTraceElement) {
         if (element is ClassElement) element.through = through
         elements += element
     }
 
-    override fun removeLast() {
+    override fun plusAssign(klass: KClass<*>) {
+        this += ClassElement(klass)
+    }
+
+    override fun unaryMinus() {
         elements.removeLastOrNull()
     }
 
