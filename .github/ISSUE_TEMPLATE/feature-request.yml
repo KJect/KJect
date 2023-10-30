@@ -1,0 +1,44 @@
+name: Feature Request
+description: Suggest a feature for KJect
+labels:
+  - Status ✨ New
+  - Type 🚀 Feature
+assignees:
+  - CheeseTastisch
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to suggest a feature to us.
+        Please fill out the following form to help us understand your suggestion.
+  - type: textarea
+    id: related
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Pleas check the following boxes if you have done the following.
+      options:
+        - label: I have search for [pull requests](https://github.com/CheeseTastisch/KJect/pulls) that implement this feature.
+          required: true
+        - label: I have searched for [issues](https://github.com/CheeseTastisch/KJect/issues) that already request this feature.
+          required: true
