@@ -13,6 +13,7 @@ import me.kject.exception.create.CircularDependencyException
 import me.kject.exception.create.IllegalFacadeException
 import me.kject.exception.create.MultipleConstructorsException
 import me.kject.exception.create.NoConstructorException
+import me.kject.internal.KJectImpl
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
@@ -31,7 +32,7 @@ object KJect {
      * @throws AlreadyInitializeException If KJect is already initialized.
      */
     @Throws(AlreadyInitializeException::class)
-    suspend fun CoroutineScope.launch(context: String = "production"): Unit = TODO()
+    suspend fun CoroutineScope.launch(context: String = "production") = KJectImpl.launch(this, context)
 
     /**
      * Disposes KJect.
@@ -39,7 +40,7 @@ object KJect {
      * @throws NotInitializeException If KJect is not initialized.
      */
     @Throws(NotInitializeException::class)
-    suspend fun dispose(): Unit = TODO()
+    suspend fun dispose() = KJectImpl.dispose()
 
     /**
      * Gets an instance of the given [type].
