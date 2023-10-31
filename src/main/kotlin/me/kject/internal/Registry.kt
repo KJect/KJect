@@ -1,17 +1,13 @@
 package me.kject.internal
 
-import me.kject.annotation.Dispose
-import me.kject.annotation.Facade
-import me.kject.annotation.Require
-import me.kject.annotation.UseConstructor
+import me.kject.annotation.*
 import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.dependency.trace.RequestType
 import me.kject.exception.DisposeFailedException
-import me.kject.exception.NotInitializeException
 import me.kject.exception.call.CallFailedException
 import me.kject.exception.create.*
 import me.kject.internal.call.Caller
-import java.util.Collections
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.*
@@ -78,7 +74,7 @@ internal object Registry {
 
             traceBuilder.through(RequestType.INITIALIZE)
             for (function in type.functions) {
-                val annotation = function.findAnnotation<Require>() ?: continue
+                val annotation = function.findAnnotation<Initialize>() ?: continue
                 if (KJectImpl.getContextValue(annotation.context) == 0) continue
 
                 @Suppress("DeferredResultUnused")
@@ -114,11 +110,10 @@ internal object Registry {
 
         traceBuilder.through(RequestType.CONSTRUCTOR)
         val instance = Caller.call(useConstructor, {}, traceBuilder).await()
-        Registry += instance
 
         traceBuilder.through(RequestType.INITIALIZE)
         for (function in type.functions) {
-            val annotation = function.findAnnotation<Require>() ?: continue
+            val annotation = function.findAnnotation<Initialize>() ?: continue
             if (KJectImpl.getContextValue(annotation.context) == 0) continue
 
             @Suppress("DeferredResultUnused")
@@ -126,6 +121,7 @@ internal object Registry {
                 this.instance = instance
             }, traceBuilder)
         }
+        Registry += instance
 
         -traceBuilder
         return instance
