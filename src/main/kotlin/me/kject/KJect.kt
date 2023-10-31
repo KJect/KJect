@@ -245,7 +245,7 @@ object KJect {
         CallCanceledException::class,
         CallFailedException::class,
     )
-    suspend fun <T> call(function: KFunction<T>, builder: CallBuilder<T>.() -> Unit): Deferred<T> =
+    suspend fun <T> call(function: KFunction<T>, builder: CallBuilder<T>.() -> Unit = {}): Deferred<T> =
         KJectImpl.call(function, builder)
 
 
