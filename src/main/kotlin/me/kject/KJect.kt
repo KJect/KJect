@@ -26,6 +26,7 @@ object KJect {
      * Different context can be used to define witch annotations should be used.
      *
      * The [scope] is used to start jobs for calling functions with different [me.kject.annotation.With.Tactic]s.
+     * The [scope] **must not be canceled**, until KJect is disposed.
      *
      * @throws AlreadyInitializeException If KJect is already initialized.
      */
