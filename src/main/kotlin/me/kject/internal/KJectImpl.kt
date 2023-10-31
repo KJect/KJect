@@ -1,13 +1,18 @@
 package me.kject.internal
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import me.kject.call.CallBuilder
 import me.kject.dependency.trace.DependencyTraceBuilder
+import me.kject.dependency.trace.FunctionElement
 import me.kject.exception.AlreadyInitializeException
 import me.kject.exception.NotFoundException
 import me.kject.exception.NotInitializeException
+import me.kject.internal.call.Caller
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 
 internal object KJectImpl {
 
@@ -62,8 +67,12 @@ internal object KJectImpl {
 
     fun <T : Any> getOrNull(type: KClass<T>) = Registry[type]
 
-    suspend fun <T : Any> getOrCreate(type: KClass<T>) = Registry[type] ?: Registry.create(type, DependencyTraceBuilder.create())
+    suspend fun <T : Any> getOrCreate(type: KClass<T>) =
+        Registry[type] ?: Registry.create(type, DependencyTraceBuilder.create())
 
     suspend fun <T : Any> create(type: KClass<T>) = Registry.create(type, DependencyTraceBuilder.create())
+
+    suspend fun <T> call(function: KFunction<T>, builder: CallBuilder<T>.() -> Unit) =
+        Caller.call(function, builder, DependencyTraceBuilder.create().also { it += FunctionElement(function) })
 
 }

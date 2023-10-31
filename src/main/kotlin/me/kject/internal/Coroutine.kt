@@ -22,8 +22,8 @@ object Coroutine {
 
     fun <T> async(
         context: CoroutineContext,
+        onDispose: Boolean,
         block: suspend CoroutineScope.() -> T,
-        onDispose: Boolean = false,
     ): Deferred<T> {
         if (!allowLaunch && !onDispose) throw NotInitializeException()
 

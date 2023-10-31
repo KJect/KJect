@@ -17,7 +17,7 @@ package me.kject.annotation
 @MustBeDocumented
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class With(val tactic: Tactic = Tactic.JOIN) {
+annotation class With(val tactic: Tactic = Tactic.JOIN, val context: String = "*") {
 
     /**
      * The tactic to use when calling a suspending function.
