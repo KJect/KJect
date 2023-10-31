@@ -8,6 +8,7 @@ import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.dependency.trace.RequestType
 import me.kject.exception.DisposeFailedException
 import me.kject.exception.NotInitializeException
+import me.kject.exception.call.CallFailedException
 import me.kject.exception.create.*
 import me.kject.internal.call.Caller
 import java.util.Collections
@@ -150,9 +151,13 @@ internal object Registry {
                     if (KJectImpl.getContextValue(annotation.context) == 0) continue@function
 
                     @Suppress("DeferredResultUnused")
-                    Caller.call(function, {
-                        this.instance = instance
-                    }, DependencyTraceBuilder.create())
+                    try {
+                        Caller.call(function, {
+                            this.instance = instance
+                        }, DependencyTraceBuilder.create())
+                    } catch (e: CallFailedException) {
+                        throw DisposeFailedException(instances)
+                    }
                 }
             }
 
