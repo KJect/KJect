@@ -25,12 +25,12 @@ object KJect {
      *
      * Different context can be used to define witch annotations should be used.
      *
-     * The [CoroutineScope] is used to start jobs for calling functions with different [me.kject.annotation.With.Tactic]s.
+     * The [scope] is used to start jobs for calling functions with different [me.kject.annotation.With.Tactic]s.
      *
      * @throws AlreadyInitializeException If KJect is already initialized.
      */
     @Throws(AlreadyInitializeException::class)
-    suspend fun CoroutineScope.launch(context: String = "production"): Unit = KJectImpl.launch(this, context)
+    suspend fun launch(scope: CoroutineScope, context: String = "production"): Unit = KJectImpl.launch(scope, context)
 
     /**
      * Disposes KJect.
