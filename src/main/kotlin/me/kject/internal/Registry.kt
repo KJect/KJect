@@ -1,14 +1,14 @@
 package me.kject.internal
 
+import me.kject.annotation.Dispose
 import me.kject.annotation.Facade
 import me.kject.annotation.Require
 import me.kject.annotation.UseConstructor
 import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.dependency.trace.RequestType
-import me.kject.exception.create.CircularDependencyException
-import me.kject.exception.create.IllegalFacadeException
-import me.kject.exception.create.MultipleConstructorsException
-import me.kject.exception.create.NoConstructorException
+import me.kject.exception.DisposeFailedException
+import me.kject.exception.NotInitializeException
+import me.kject.exception.create.*
 import me.kject.internal.call.Caller
 import java.util.Collections
 import kotlin.reflect.KClass
@@ -16,6 +16,8 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.full.*
 
 internal object Registry {
+
+    var allowCreate = false
 
     private val instances = Collections.synchronizedList(mutableListOf<Any>())
 
@@ -31,6 +33,8 @@ internal object Registry {
             ?.let { type.cast(it) }
 
     suspend fun <T : Any> create(type: KClass<T>, traceBuilder: DependencyTraceBuilder): T {
+        if (KJectImpl.disposed) throw InDisposeException()
+
         if (type in traceBuilder.classes) {
             traceBuilder += type
             throw CircularDependencyException(type, traceBuilder.build())
@@ -127,7 +131,35 @@ internal object Registry {
     }
 
     suspend fun disposeInstances() {
-        TODO()
+        var before: Int
+        val done = mutableListOf<Any>()
+        while (instances.isNotEmpty()) {
+            before = instances.size
+
+            instance@ for (instance in instances) {
+                for (other in instances) {
+                    for (require in other::class.findAnnotations<Require>()) {
+                        if (require.required == instance::class) continue@instance
+                    }
+                }
+
+                done += instance
+
+                function@ for (function in instance::class.functions) {
+                    val annotation = function.findAnnotation<Dispose>() ?: continue@function
+                    if (KJectImpl.getContextValue(annotation.context) == 0) continue@function
+
+                    @Suppress("DeferredResultUnused")
+                    Caller.call(function, {
+                        this.instance = instance
+                    }, DependencyTraceBuilder.create())
+                }
+            }
+
+            instances.removeAll(done)
+
+            if (before == instances.size) throw DisposeFailedException(instances)
+        }
     }
 
 }

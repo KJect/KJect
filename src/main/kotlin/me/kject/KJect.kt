@@ -4,15 +4,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import me.kject.call.CallBuilder
 import me.kject.exception.AlreadyInitializeException
+import me.kject.exception.DisposeFailedException
 import me.kject.exception.NotFoundException
 import me.kject.exception.NotInitializeException
 import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
-import me.kject.exception.create.CircularDependencyException
-import me.kject.exception.create.IllegalFacadeException
-import me.kject.exception.create.MultipleConstructorsException
-import me.kject.exception.create.NoConstructorException
+import me.kject.exception.create.*
 import me.kject.internal.KJectImpl
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -38,8 +36,10 @@ object KJect {
      * Disposes KJect.
      *
      * @throws NotInitializeException If KJect is not initialized.
+     * @throws InDisposeException If a instance needs a class in an dispose function that is not required throw [@Require][me.kject.annotation.Require].
+     * @throws DisposeFailedException If KJect fails to dispose some instances.
      */
-    @Throws(NotInitializeException::class)
+    @Throws(NotInitializeException::class, InDisposeException::class, DisposeFailedException::class)
     suspend fun dispose(): Unit = KJectImpl.dispose()
 
     /**
@@ -86,6 +86,7 @@ object KJect {
      * Gets an instance of the given [type] or creates it if it is not in the registry.
      *
      * @throws NotInitializeException If KJect is not initialized.
+     * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws NoConstructorException If no constructor is found.
@@ -96,6 +97,7 @@ object KJect {
      */
     @Throws(
         NotInitializeException::class,
+        InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         NoConstructorException::class,
@@ -108,6 +110,7 @@ object KJect {
 
     /**
      * @throws NotInitializeException If KJect is not initialized.
+     * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws NoConstructorException If no constructor is found.
@@ -120,6 +123,7 @@ object KJect {
      */
     @Throws(
         NotInitializeException::class,
+        InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         NoConstructorException::class,
@@ -155,6 +159,7 @@ object KJect {
      * After that the created instance will be returned.
      *
      * @throws NotInitializeException If KJect is not initialized.
+     * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws NoConstructorException If no constructor is found.
@@ -165,6 +170,7 @@ object KJect {
      */
     @Throws(
         NotInitializeException::class,
+        InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         NoConstructorException::class,
@@ -177,7 +183,8 @@ object KJect {
 
     /**
      * @throws NotInitializeException If KJect is not initialized.
-     * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
+     * @throws InDisposeException If KJect is currently being disposed.
+     * @throws IllegalFacadeException If [type][T] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws NoConstructorException If no constructor is found.
      * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
@@ -189,6 +196,7 @@ object KJect {
      */
     @Throws(
         NotInitializeException::class,
+        InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         NoConstructorException::class,
@@ -215,6 +223,7 @@ object KJect {
      * See [Tactic][me.kject.annotation.With.Tactic] for more information on how suspending functions are called.
      *
      * @throws NotInitializeException If KJect is not initialized.
+     * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If any type is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws NoConstructorException If no constructor is found.
@@ -227,6 +236,7 @@ object KJect {
      */
     @Throws(
         NotInitializeException::class,
+        InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         NoConstructorException::class,
