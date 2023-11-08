@@ -37,7 +37,7 @@ object KJect {
      * Disposes KJect.
      *
      * @throws NotInitializeException If KJect is not initialized.
-     * @throws InDisposeException If a instance needs a class in an dispose function that is not required throw [@Require][me.kject.annotation.Require].
+     * @throws InDisposeException If an instance needs a class in a dispose function that is not required throw [@Require][me.kject.annotation.Require].
      * @throws DisposeFailedException If KJect fails to dispose some instances.
      */
     @Throws(NotInitializeException::class, InDisposeException::class, DisposeFailedException::class)
@@ -112,7 +112,7 @@ object KJect {
     /**
      * @throws NotInitializeException If KJect is not initialized.
      * @throws InDisposeException If KJect is currently being disposed.
-     * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
+     * @throws IllegalFacadeException If [type][T] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws NoConstructorException If no constructor is found.
      * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
@@ -225,7 +225,7 @@ object KJect {
      *
      * @throws NotInitializeException If KJect is not initialized.
      * @throws InDisposeException If KJect is currently being disposed.
-     * @throws IllegalFacadeException If any type is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
+     * @throws IllegalFacadeException If any type is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws NoConstructorException If no constructor is found.
      * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].

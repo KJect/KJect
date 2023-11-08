@@ -52,12 +52,12 @@ interface CallBuilder<T> {
     operator fun set(name: String, value: Any?)
 
     /**
-     * Gets the [value] for the given [parameter].
+     * Gets the value for the given [parameter].
      */
     operator fun get(parameter: KParameter): Any?
 
     /**
-     * Gets the [value] for a parameter by its [name].
+     * Gets the value for a parameter by its [name].
      *
      * @throws UnknownParameterException If the parameter does not exist.
      */
