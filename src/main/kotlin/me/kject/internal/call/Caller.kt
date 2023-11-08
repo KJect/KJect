@@ -21,6 +21,7 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.full.callSuspendBy
 import kotlin.reflect.full.findAnnotations
 import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.jvm.isAccessible
 
 object Caller {
 
@@ -58,6 +59,8 @@ object Caller {
                 tactic = with.tactic
             }
         }
+
+        function.isAccessible = true
 
         if (tactic == null) tactic = With.Tactic.JOIN
         val deferred = Coroutine.async(
