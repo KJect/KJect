@@ -136,7 +136,7 @@ internal object Registry {
             instance@ for (instance in instances) {
                 for (other in instances) {
                     for (require in other::class.findAnnotations<Require>()) {
-                        if (require.required == instance::class) continue@instance
+                        if (get(require.required) == instance) continue@instance
                     }
                 }
 
@@ -150,7 +150,7 @@ internal object Registry {
                     try {
                         Caller.call(function, {
                             this.instance = instance
-                        }, DependencyTraceBuilder.create())
+                        }, DependencyTraceBuilder.create(), onDispose = true)
                     } catch (e: CallFailedException) {
                         throw DisposeFailedException(instances)
                     }
