@@ -30,8 +30,6 @@ internal object Registry {
             ?.let { type.cast(it) }
 
     suspend fun <T : Any> create(type: KClass<T>, traceBuilder: DependencyTraceBuilder): T {
-        if (KJectImpl.disposed) throw InDisposeException()
-
         if (type in traceBuilder.classes) {
             traceBuilder += type
             throw CircularDependencyException(type, traceBuilder.build())
