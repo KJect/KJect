@@ -10,4 +10,4 @@ object Scope : CoroutineScope {
 
 }
 
-fun blocking(block: suspend CoroutineScope.() -> Unit) = runBlocking(Scope.coroutineContext, block)
+fun <R> blocking(block: suspend CoroutineScope.() -> R): R = runBlocking(Scope.coroutineContext, block)

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.TestMethodOrder
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class KJectTest {
+interface KJectTest {
 
     companion object {
 
@@ -16,7 +16,7 @@ class KJectTest {
         @BeforeAll
         @JvmStatic
         fun setup() = blocking {
-            KJect.launch(this, context)
+            KJect.launch(Scope, context)
         }
 
         @AfterAll
