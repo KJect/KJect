@@ -218,7 +218,7 @@ object KJect {
      * If a parameter is not present in the builder, has no default value and is not nullable, an
      * [BadParameterException] will be thrown.
      *
-     * If the call is successful, the return value is returned, if not, a [CallFailedException] is thrown.
+     * A [Deferred] is returned, that will be completed with the result of the function or an [CallFailedException].
      *
      * If the invoked function is suspending, the call is also suspending.
      * See [Tactic][me.kject.annotation.With.Tactic] for more information on how suspending functions are called.
@@ -231,7 +231,6 @@ object KJect {
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
      * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
-     * @throws CallFailedException If the call to the constructor or the initialize function fails.
      *
      * @see getOrCreate
      */
@@ -244,7 +243,6 @@ object KJect {
         BadParameterException::class,
         MultipleWithsException::class,
         CallCanceledException::class,
-        CallFailedException::class,
     )
     suspend fun <T> call(function: KFunction<T>, builder: CallBuilder<T>.() -> Unit = {}): Deferred<T> =
         KJectImpl.call(function, builder)

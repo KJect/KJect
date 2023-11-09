@@ -1,9 +1,6 @@
 package me.kject.internal
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import me.kject.exception.NotInitializeException
 import kotlin.coroutines.CoroutineContext
 
@@ -20,21 +17,19 @@ object Coroutine {
         jobs.clear()
     }
 
-    fun <T> async(
+    fun launch(
         context: CoroutineContext,
         onDispose: Boolean,
-        block: suspend CoroutineScope.() -> T,
-    ): Deferred<T> {
+        block: suspend CoroutineScope.() -> Unit,
+    ) {
         if (!allowLaunch && !onDispose) throw NotInitializeException()
 
-        val deferred = KJectImpl.scope.async(context, block = block)
+        val job = KJectImpl.scope.launch(context, block = block)
 
         if (!onDispose) {
-            jobs.add(deferred)
-            deferred.invokeOnCompletion { jobs.remove(deferred) }
+            jobs.add(job)
+            job.invokeOnCompletion { jobs.remove(job) }
         }
-
-        return deferred
     }
 
 }

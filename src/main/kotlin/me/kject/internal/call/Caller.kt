@@ -1,6 +1,7 @@
 package me.kject.internal.call
 
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import me.kject.annotation.Inject
@@ -64,7 +65,9 @@ object Caller {
         function.isAccessible = true
 
         if (tactic == null) tactic = With.Tactic.JOIN
-        val deferred = Coroutine.async(
+        val deferred = CompletableDeferred<T>();
+
+        Coroutine.launch(
             when (tactic) {
                 With.Tactic.JOIN, With.Tactic.LAUNCH -> EmptyCoroutineContext
                 With.Tactic.DEFAULT -> Dispatchers.Default
@@ -74,9 +77,10 @@ object Caller {
             onDispose,
         ) {
             try {
-                function.callSuspendBy(parameterMap)
+                val result = function.callSuspendBy(parameterMap)
+                deferred.complete(result)
             } catch (e: InvocationTargetException) {
-                throw CallFailedException(function, e.targetException)
+                deferred.completeExceptionally(CallFailedException(function, e.targetException))
             }
         }
 
