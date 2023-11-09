@@ -10,26 +10,26 @@ import org.junit.jupiter.api.Order
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestStandard : KJectTest {
+class TestStandard : KJectTest() {
 
     @Test
     @Order(1)
     fun testNotFound() {
-        assertThrows<NotFoundException> { KJect.get<InstanceA>() }
-        assertEquals(null, KJect.getOrNull<InstanceA>())
+        assertThrows<NotFoundException> { KJect.get<Instance>() }
+        assertEquals(null, KJect.getOrNull<Instance>())
     }
 
     @Test
     @Order(2)
     fun testCreateAndGet() {
-        val instance = assertDoesNotThrow { KJect.create<InstanceA>() }
-        assertEquals(InstanceA::class, instance::class)
+        val instance = assertDoesNotThrow { KJect.create<Instance>() }
+        assertEquals(Instance::class, instance::class)
 
-        assertEquals(instance, KJect.get<InstanceA>())
-        assertEquals(instance, KJect.getOrNull<InstanceA>())
-        blocking { assertEquals(instance, KJect.getOrCreate<InstanceA>()) }
+        assertEquals(instance, KJect.get<Instance>())
+        assertEquals(instance, KJect.getOrNull<Instance>())
+        blocking { assertEquals(instance, KJect.getOrCreate<Instance>()) }
     }
 
-}
+    private class Instance
 
-private class InstanceA
+}
