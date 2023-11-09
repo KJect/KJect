@@ -46,14 +46,14 @@ internal object Registry {
             val value = KJectImpl.getContextValue(facade.context)
             if (value == 0) continue
             if (value == 2) {
-                if (directFacade) TODO("Throw correct exception")
+                if (directFacade) throw MultipleFacadesException(type)
 
                 usedFacade = facade
                 directFacade = true
             }
 
             if (value == 1 && !directFacade) {
-                if (usedFacade != null) TODO("Throw correct exception")
+                if (usedFacade != null) throw MultipleFacadesException(type)
                 usedFacade = facade
             }
         }
@@ -94,19 +94,19 @@ internal object Registry {
 
             if (value == 0) continue
             if (value == 2) {
-                if (directConstructor) throw MultipleConstructorsException(type)
+                if (directConstructor) throw IllegalConstructorsException(type)
 
                 useConstructor = constructor
                 directConstructor = true
             }
 
             if (value == 1 && !directConstructor) {
-                if (useConstructor != null) throw MultipleConstructorsException(type)
+                if (useConstructor != null) throw IllegalConstructorsException(type)
                 useConstructor = constructor
             }
         }
 
-        if (useConstructor == null) useConstructor = type.primaryConstructor ?: throw NoConstructorException(type)
+        if (useConstructor == null) useConstructor = type.primaryConstructor ?: throw IllegalConstructorsException(type)
 
         traceBuilder.through(RequestType.CONSTRUCTOR)
         val instance = Caller.call(useConstructor, {}, traceBuilder).await()
@@ -129,7 +129,7 @@ internal object Registry {
 
     suspend fun disposeInstances() {
         var before: Int
-        val done = mutableListOf<Any>()
+        val done = mutableSetOf<Any>()
         while (instances.isNotEmpty()) {
             before = instances.size
 

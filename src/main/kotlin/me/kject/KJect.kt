@@ -10,6 +10,7 @@ import me.kject.exception.NotInitializeException
 import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
+import me.kject.exception.call.MultipleWithsException
 import me.kject.exception.create.*
 import me.kject.internal.KJectImpl
 import kotlin.reflect.KClass
@@ -90,9 +91,10 @@ object KJect {
      * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
-     * @throws NoConstructorException If no constructor is found.
-     * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
+     * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
+     * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
+     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      */
@@ -101,9 +103,10 @@ object KJect {
         InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
-        NoConstructorException::class,
-        MultipleConstructorsException::class,
+        IllegalConstructorsException::class,
+        MultipleFacadesException::class,
         BadParameterException::class,
+        MultipleWithsException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -114,9 +117,10 @@ object KJect {
      * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If [type][T] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
-     * @throws NoConstructorException If no constructor is found.
-     * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
+     * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
+     * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
+     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      *
@@ -127,9 +131,10 @@ object KJect {
         InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
-        NoConstructorException::class,
-        MultipleConstructorsException::class,
+        IllegalConstructorsException::class,
+        MultipleFacadesException::class,
         BadParameterException::class,
+        MultipleWithsException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -147,9 +152,9 @@ object KJect {
      *
      * If [type] is an object, the object instance will now be used, otherwise an instance needs to be created.
      * For this KJect tires to find a constructor annotated with [UseConstructor][me.kject.annotation.UseConstructor].
-     * If multiple constructors that match are found an [MultipleConstructorsException] will be thrown.
+     * If multiple constructors that match are found an [IllegalConstructorsException] will be thrown.
      * If no constructor is annotated, the primary constructor will be used.
-     * Otherwise, an [NoConstructorException] will be thrown.
+     * Otherwise, an [IllegalConstructorsException] will be thrown.
      *
      * Now the created instance will be saved for later use.
      *
@@ -163,9 +168,10 @@ object KJect {
      * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
-     * @throws NoConstructorException If no constructor is found.
-     * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
+     * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
+     * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
+     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      */
@@ -174,9 +180,10 @@ object KJect {
         InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
-        NoConstructorException::class,
-        MultipleConstructorsException::class,
+        IllegalConstructorsException::class,
+        MultipleFacadesException::class,
         BadParameterException::class,
+        MultipleWithsException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -187,9 +194,10 @@ object KJect {
      * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If [type][T] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
-     * @throws NoConstructorException If no constructor is found.
-     * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
+     * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
+     * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
+     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      *
@@ -200,9 +208,10 @@ object KJect {
         InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
-        NoConstructorException::class,
-        MultipleConstructorsException::class,
+        IllegalConstructorsException::class,
+        MultipleFacadesException::class,
         BadParameterException::class,
+        MultipleWithsException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -227,9 +236,10 @@ object KJect {
      * @throws InDisposeException If KJect is currently being disposed.
      * @throws IllegalFacadeException If any type is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
-     * @throws NoConstructorException If no constructor is found.
-     * @throws MultipleConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
+     * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
+     * @throws MultipleFacadesException If multiple facades are found on any type.
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
+     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      *
@@ -240,9 +250,10 @@ object KJect {
         InDisposeException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
-        NoConstructorException::class,
-        MultipleConstructorsException::class,
+        IllegalConstructorsException::class,
+        MultipleFacadesException::class,
         BadParameterException::class,
+        MultipleWithsException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )

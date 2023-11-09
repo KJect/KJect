@@ -10,6 +10,7 @@ import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
+import me.kject.exception.call.MultipleWithsException
 import me.kject.internal.Coroutine
 import me.kject.internal.KJectImpl
 import me.kject.internal.Registry
@@ -48,14 +49,14 @@ object Caller {
             val value = KJectImpl.getContextValue(with.context)
 
             if (value == 2) {
-                if (directTactic) TODO("Throw correct exception")
+                if (directTactic) throw MultipleWithsException(function)
 
                 tactic = with.tactic
                 directTactic = true
             }
 
             if (value == 1 && !directTactic) {
-                if (tactic != null) TODO("Throw correct exception")
+                if (tactic != null) throw MultipleWithsException(function)
                 tactic = with.tactic
             }
         }
