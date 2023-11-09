@@ -9,6 +9,7 @@ import me.kject.test.util.blocking
 import org.junit.jupiter.api.Order
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class TestStandard : KJectTest() {
 
@@ -23,7 +24,7 @@ class TestStandard : KJectTest() {
     @Order(2)
     fun testCreateAndGet() {
         val instance = assertDoesNotThrow { KJect.create<Instance>() }
-        assertEquals(Instance::class, instance::class)
+        assertIs<Instance>(instance)
 
         assertEquals(instance, KJect.get<Instance>())
         assertEquals(instance, KJect.getOrNull<Instance>())
