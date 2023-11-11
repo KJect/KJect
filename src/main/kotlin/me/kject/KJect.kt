@@ -37,8 +37,6 @@ object KJect {
     /**
      * Disposes KJect.
      *
-     * This function will cancel the scope provided at the launch of KJect, was well as all its children.
-     *
      * @throws NotInitializeException If KJect is not initialized.
      * @throws DisposeFailedException If KJect fails to dispose some instances.
      */

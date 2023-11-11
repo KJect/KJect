@@ -1,9 +1,6 @@
 package me.kject.internal
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.kject.call.CallBuilder
@@ -13,6 +10,7 @@ import me.kject.exception.AlreadyInitializeException
 import me.kject.exception.NotFoundException
 import me.kject.exception.NotInitializeException
 import me.kject.internal.call.Caller
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
@@ -44,7 +42,11 @@ internal object KJectImpl {
             if (!disposed || _scope != null || _context != null) throw AlreadyInitializeException()
             disposed = false
 
-            _scope = scope
+            _scope = CoroutineScope(
+                EmptyCoroutineContext +
+                        Job(scope.coroutineContext.job) +
+                        CoroutineName("KJect")
+            )
             _context = context
 
             Registry.allowCreate = true
@@ -59,7 +61,6 @@ internal object KJectImpl {
             Registry.allowCreate = false
 
             scope.coroutineContext.cancelChildren()
-            scope.cancel()
 
             Registry.disposeInstances()
 
