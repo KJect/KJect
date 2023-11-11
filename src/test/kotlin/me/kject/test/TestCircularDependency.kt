@@ -7,8 +7,8 @@ import me.kject.annotation.Require
 import me.kject.dependency.trace.ClassElement
 import me.kject.dependency.trace.RequestType
 import me.kject.exception.create.CircularDependencyException
-import me.kject.test.util.KJectTest
-import me.kject.test.util.assertThrows
+import me.kject.util.KJectTest
+import me.kject.util.assertThrows
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

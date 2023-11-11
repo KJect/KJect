@@ -2,8 +2,8 @@ package me.kject.test
 
 import me.kject.KJect
 import me.kject.annotation.Require
-import me.kject.test.util.KJectTest
-import me.kject.test.util.assertDoesNotThrow
+import me.kject.util.KJectTest
+import me.kject.util.assertDoesNotThrow
 import org.junit.jupiter.api.Order
 import kotlin.test.Test
 

@@ -4,9 +4,9 @@ import me.kject.KJect
 import me.kject.annotation.Facade
 import me.kject.exception.create.IllegalFacadeException
 import me.kject.exception.create.MultipleFacadesException
-import me.kject.test.util.KJectTest
-import me.kject.test.util.assertDoesNotThrow
-import me.kject.test.util.assertThrows
+import me.kject.util.KJectTest
+import me.kject.util.assertDoesNotThrow
+import me.kject.util.assertThrows
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

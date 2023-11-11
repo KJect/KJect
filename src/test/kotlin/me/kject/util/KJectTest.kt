@@ -1,5 +1,6 @@
-package me.kject.test.util
+package me.kject.util
 
+import kotlinx.coroutines.CancellationException
 import me.kject.KJect
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -21,8 +22,13 @@ open class KJectTest(
 
     @Test
     @Order(Int.MAX_VALUE)
-    fun teardown() = blocking {
-        if (teardown) KJect.dispose()
+    fun teardown() {
+        try {
+            blocking {
+                    if (teardown) KJect.dispose()
+            }
+        } catch (_: CancellationException) {}
     }
+
 
 }

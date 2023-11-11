@@ -13,9 +13,10 @@ import me.kject.exception.call.MultipleWithsException
 import me.kject.exception.parameter.NoInstanceParameterException
 import me.kject.exception.parameter.NoReceiverParameterException
 import me.kject.exception.parameter.UnknownParameterException
-import me.kject.test.util.KJectTest
-import me.kject.test.util.assertThrows
-import me.kject.test.util.blocking
+import me.kject.util.KJectTest
+import me.kject.util.Scope
+import me.kject.util.assertThrows
+import me.kject.util.blocking
 import org.junit.jupiter.api.Order
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -64,14 +65,14 @@ class TestMethodCall : KJectTest(teardown = false) {
         blocking { KJect.dispose() }
 
         assertThrows<CallCanceledException> {
-            KJect.launch(this)
+            KJect.launch(Scope)
 
             launch {
                 delay(1000)
                 KJect.dispose()
             }
 
-            KJect.call(::wait)
+            KJect.call(::wait).await()
         }
     }
 
@@ -85,13 +86,9 @@ fun main() {
         launch {
             delay(1000)
             KJect.dispose()
-
-//            this@runBlocking.cancel()
         }
 
-        runBlocking(this.coroutineContext) {
-            KJect.call(::wait)
-        }
+        KJect.call(::wait).await()
     }
 }
 
@@ -115,7 +112,7 @@ private class TestClass(val parameter: String) {
 
 private fun test(parameter: String) = "Hello $parameter"
 
-private fun fail(): Nothing = throw Exception("This should not be called!")
+private fun fail(): Nothing = throw Exception()
 
 @With(With.Tactic.IO)
 @With(With.Tactic.DEFAULT)

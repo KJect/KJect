@@ -1,4 +1,4 @@
-package me.kject.test.util
+package me.kject.util
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

@@ -7,9 +7,9 @@ import me.kject.annotation.Dispose
 import me.kject.annotation.UseConstructor
 import me.kject.exception.NotInitializeException
 import me.kject.exception.create.IllegalConstructorsException
-import me.kject.test.util.KJectTest
-import me.kject.test.util.assertThrows
-import me.kject.test.util.blocking
+import me.kject.util.KJectTest
+import me.kject.util.assertThrows
+import me.kject.util.blocking
 import org.junit.jupiter.api.Order
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds

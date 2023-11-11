@@ -3,8 +3,8 @@ package me.kject.test
 import me.kject.KJect
 import me.kject.annotation.Dispose
 import me.kject.annotation.Initialize
-import me.kject.test.util.KJectTest
-import me.kject.test.util.blocking
+import me.kject.util.KJectTest
+import me.kject.util.blocking
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

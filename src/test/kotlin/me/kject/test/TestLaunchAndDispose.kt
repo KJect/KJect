@@ -3,8 +3,9 @@ package me.kject.test
 import me.kject.KJect
 import me.kject.exception.AlreadyInitializeException
 import me.kject.exception.NotInitializeException
-import me.kject.test.util.assertDoesNotThrow
-import me.kject.test.util.assertThrows
+import me.kject.util.Scope
+import me.kject.util.assertDoesNotThrow
+import me.kject.util.assertThrows
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestMethodOrder
@@ -16,8 +17,8 @@ class TestLaunchAndDispose {
     @Test
     @Order(1)
     fun testLaunch() {
-        assertDoesNotThrow { KJect.launch(this) }
-        assertThrows<AlreadyInitializeException> { KJect.launch(this) }
+        assertDoesNotThrow { KJect.launch(Scope) }
+        assertThrows<AlreadyInitializeException> { KJect.launch(Scope) }
     }
 
     @Test
