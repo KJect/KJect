@@ -64,6 +64,8 @@ internal object KJectImpl {
 
             Registry.disposeInstances()
 
+            scope.cancel()
+
             _scope = null
             _context = null
         }

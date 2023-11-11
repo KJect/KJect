@@ -62,7 +62,7 @@ object Caller {
         if (tactic == null) tactic = With.Tactic.JOIN
         val deferred = CompletableDeferred<T>()
 
-        KJectImpl.scope.launch(
+        val job = KJectImpl.scope.launch(
             when (tactic) {
                 With.Tactic.JOIN, With.Tactic.LAUNCH -> EmptyCoroutineContext
                 With.Tactic.DEFAULT -> Dispatchers.Default
@@ -78,13 +78,11 @@ object Caller {
             }
         }
 
-        if (tactic == With.Tactic.JOIN) {
-            try {
-                deferred.await()
-            } catch (e: CancellationException) {
-                throw CallCanceledException(function)
-            }
+        job.invokeOnCompletion {
+            if (it is CancellationException) deferred.completeExceptionally(CallCanceledException(function))
         }
+
+        if (tactic == With.Tactic.JOIN) deferred.await()
 
         return deferred
     }
