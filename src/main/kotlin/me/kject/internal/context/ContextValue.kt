@@ -2,8 +2,8 @@ package me.kject.internal.context
 
 enum class ContextValue {
 
-    CURRENT,
+    NONE,
     ALL,
-    NONE;
+    CURRENT;
     
 }
