@@ -2,6 +2,8 @@ package me.kject.internal
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.kject.call.CallBuilder
@@ -45,8 +47,6 @@ internal object KJectImpl {
             _scope = scope
             _context = context
 
-            Coroutine.allowLaunch = true
-
             Registry.allowCreate = true
         }
     }
@@ -56,10 +56,10 @@ internal object KJectImpl {
             if (disposed || _scope == null || _context == null) throw NotInitializeException()
             disposed = true
 
-            Coroutine.allowLaunch = false
             Registry.allowCreate = false
 
-            Coroutine.cancelAllJobs()
+            scope.coroutineContext.cancelChildren()
+            scope.cancel()
 
             Registry.disposeInstances()
 

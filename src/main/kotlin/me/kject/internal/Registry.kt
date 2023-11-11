@@ -148,7 +148,7 @@ internal object Registry {
                     try {
                         Caller.call(function, {
                             this.instance = instance
-                        }, DependencyTraceBuilder.create(), onDispose = true)
+                        }, DependencyTraceBuilder.create())
                     } catch (e: CallFailedException) {
                         throw DisposeFailedException(instances)
                     }

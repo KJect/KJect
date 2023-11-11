@@ -1,9 +1,6 @@
 package me.kject.internal.call
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import me.kject.annotation.Inject
 import me.kject.annotation.With
 import me.kject.call.CallBuilder
@@ -12,7 +9,6 @@ import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
 import me.kject.exception.call.MultipleWithsException
-import me.kject.internal.Coroutine
 import me.kject.internal.KJectImpl
 import me.kject.internal.Registry
 import java.lang.reflect.InvocationTargetException
@@ -31,7 +27,6 @@ object Caller {
         function: KFunction<T>,
         builder: CallBuilder<T>.() -> Unit,
         dependencyTraceBuilder: DependencyTraceBuilder,
-        onDispose: Boolean = false
     ): Deferred<T> {
         val arguments = CallBuilderImpl(function).apply(builder).getParameters()
 
@@ -65,16 +60,15 @@ object Caller {
         function.isAccessible = true
 
         if (tactic == null) tactic = With.Tactic.JOIN
-        val deferred = CompletableDeferred<T>();
+        val deferred = CompletableDeferred<T>()
 
-        Coroutine.launch(
+        KJectImpl.scope.launch(
             when (tactic) {
                 With.Tactic.JOIN, With.Tactic.LAUNCH -> EmptyCoroutineContext
                 With.Tactic.DEFAULT -> Dispatchers.Default
                 With.Tactic.UNCONFINED -> Dispatchers.Unconfined
                 With.Tactic.IO -> Dispatchers.IO
             },
-            onDispose,
         ) {
             try {
                 val result = function.callSuspendBy(parameterMap)
