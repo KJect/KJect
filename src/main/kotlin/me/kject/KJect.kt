@@ -220,8 +220,8 @@ object KJect {
      *
      * A [Deferred] is returned, that will be completed
      * - with the result of the function
-     * - an [CallFailedException] if the called function throws an exception or
-     * - an [CallCanceledException] if KJect was disposed while the function was running.
+     * - a [CallFailedException] if the called function threw an exception or
+     * - a [CallCanceledException] if KJect was disposed while the function was running.
      *
      * If the invoked function is suspending, the call is also suspending.
      * See [Tactic][me.kject.annotation.With.Tactic] for more information on how suspending functions are called.
