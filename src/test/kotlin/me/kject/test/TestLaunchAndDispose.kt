@@ -1,8 +1,8 @@
 package me.kject.test
 
 import me.kject.KJect
-import me.kject.exception.AlreadyInitializeException
-import me.kject.exception.NotInitializeException
+import me.kject.exception.AlreadyInitializedException
+import me.kject.exception.NotInitializedException
 import me.kject.util.Scope
 import me.kject.util.assertDoesNotThrow
 import me.kject.util.assertThrows
@@ -18,24 +18,24 @@ class TestLaunchAndDispose {
     @Order(1)
     fun testLaunch() {
         assertDoesNotThrow { KJect.launch(Scope) }
-        assertThrows<AlreadyInitializeException> { KJect.launch(Scope) }
+        assertThrows<AlreadyInitializedException> { KJect.launch(Scope) }
     }
 
     @Test
     @Order(2)
     fun testDispose() {
         assertDoesNotThrow { KJect.dispose() }
-        assertThrows<NotInitializeException> { KJect.dispose() }
+        assertThrows<NotInitializedException> { KJect.dispose() }
     }
 
     @Test
     @Order(3)
     fun testNotInitialized() {
-        assertThrows<NotInitializeException> { KJect.get<Any>() }
-        assertThrows<NotInitializeException> { KJect.getOrNull<Any>() }
-        assertThrows<NotInitializeException> { KJect.getOrCreate<Any>() }
-        assertThrows<NotInitializeException> { KJect.create<Any>() }
-        assertThrows<NotInitializeException> { KJect.call(::testNotInitialized) }
+        assertThrows<NotInitializedException> { KJect.get<Any>() }
+        assertThrows<NotInitializedException> { KJect.getOrNull<Any>() }
+        assertThrows<NotInitializedException> { KJect.getOrCreate<Any>() }
+        assertThrows<NotInitializedException> { KJect.create<Any>() }
+        assertThrows<NotInitializedException> { KJect.call(::testNotInitialized) }
     }
 
 }

@@ -3,10 +3,10 @@ package me.kject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import me.kject.call.CallBuilder
-import me.kject.exception.AlreadyInitializeException
+import me.kject.exception.AlreadyInitializedException
 import me.kject.exception.DisposeFailedException
 import me.kject.exception.NotFoundException
-import me.kject.exception.NotInitializeException
+import me.kject.exception.NotInitializedException
 import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
@@ -29,18 +29,18 @@ object KJect {
      * The [scope] is used to start jobs for calling functions with different [Tactic][me.kject.annotation.With.Tactic]s.
      * The [scope] **must not be canceled**, until KJect is disposed.
      *
-     * @throws AlreadyInitializeException If KJect is already initialized.
+     * @throws AlreadyInitializedException If KJect is already initialized.
      */
-    @Throws(AlreadyInitializeException::class)
+    @Throws(AlreadyInitializedException::class)
     suspend fun launch(scope: CoroutineScope, context: String = "production"): Unit = KJectImpl.launch(scope, context)
 
     /**
      * Disposes KJect.
      *
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws DisposeFailedException If KJect fails to dispose some instances.
      */
-    @Throws(NotInitializeException::class, DisposeFailedException::class)
+    @Throws(NotInitializedException::class, DisposeFailedException::class)
     suspend fun dispose(): Unit = KJectImpl.dispose()
 
     /**
@@ -50,43 +50,43 @@ object KJect {
      * For this the returned instance does not have to be the same as the given [type],
      * but can also be a subclass of the given [type].
      *
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws NotFoundException If no instance of the given [type] is in the registry.
      */
-    @Throws(NotInitializeException::class, NotFoundException::class)
+    @Throws(NotInitializedException::class, NotFoundException::class)
     operator fun <T : Any> get(type: KClass<T>): T = KJectImpl[type]
 
     /**
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws NotFoundException If no instance of the given [type][T] is in the registry.
      *
      * @see get
      */
-    @Throws(NotInitializeException::class, NotFoundException::class)
+    @Throws(NotInitializedException::class, NotFoundException::class)
     inline fun <reified T : Any> get(): T = get(T::class)
 
     /**
      * Gets an instance of the given [type] or `null` if no instance of the given [type] is in the registry.
      *
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      *
      * @see get
      */
-    @Throws(NotInitializeException::class)
+    @Throws(NotInitializedException::class)
     fun <T : Any> getOrNull(type: KClass<T>): T? = KJectImpl.getOrNull(type)
 
     /**
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      *
      * @see getOrNull
      */
-    @Throws(NotInitializeException::class)
+    @Throws(NotInitializedException::class)
     inline fun <reified T : Any> getOrNull(): T? = getOrNull(T::class)
 
     /**
      * Gets an instance of the given [type] or creates it if it is not in the registry.
      *
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
@@ -97,7 +97,7 @@ object KJect {
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      */
     @Throws(
-        NotInitializeException::class,
+        NotInitializedException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         IllegalConstructorsException::class,
@@ -110,7 +110,7 @@ object KJect {
     suspend fun <T : Any> getOrCreate(type: KClass<T>): T = KJectImpl.getOrCreate(type)
 
     /**
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws IllegalFacadeException If [type][T] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
@@ -123,7 +123,7 @@ object KJect {
      * @see getOrCreate
      */
     @Throws(
-        NotInitializeException::class,
+        NotInitializedException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         IllegalConstructorsException::class,
@@ -159,7 +159,7 @@ object KJect {
      *
      * After that the created instance will be returned.
      *
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws IllegalFacadeException If [type] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
@@ -170,7 +170,7 @@ object KJect {
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      */
     @Throws(
-        NotInitializeException::class,
+        NotInitializedException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         IllegalConstructorsException::class,
@@ -183,7 +183,7 @@ object KJect {
     suspend fun <T : Any> create(type: KClass<T>): T = KJectImpl.create(type)
 
     /**
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws IllegalFacadeException If [type][T] is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
@@ -196,7 +196,7 @@ object KJect {
      * @see create
      */
     @Throws(
-        NotInitializeException::class,
+        NotInitializedException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         IllegalConstructorsException::class,
@@ -226,7 +226,7 @@ object KJect {
      * If the invoked function is suspending, the call is also suspending.
      * See [Tactic][me.kject.annotation.With.Tactic] for more information on how suspending functions are called.
      *
-     * @throws NotInitializeException If KJect is not initialized.
+     * @throws NotInitializedException If KJect is not initialized.
      * @throws IllegalFacadeException If any type is annotated with [Facade][me.kject.annotation.Facade] but the building does not implement [type][T].
      * @throws CircularDependencyException If a circular dependency is detected.
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
@@ -237,7 +237,7 @@ object KJect {
      * @see getOrCreate
      */
     @Throws(
-        NotInitializeException::class,
+        NotInitializedException::class,
         IllegalFacadeException::class,
         CircularDependencyException::class,
         IllegalConstructorsException::class,

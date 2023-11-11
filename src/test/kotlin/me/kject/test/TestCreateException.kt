@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import me.kject.KJect
 import me.kject.annotation.Dispose
 import me.kject.annotation.UseConstructor
-import me.kject.exception.NotInitializeException
+import me.kject.exception.NotInitializedException
 import me.kject.exception.create.IllegalConstructorsException
 import me.kject.util.KJectTest
 import me.kject.util.assertThrows
@@ -30,7 +30,7 @@ class TestCreateException : KJectTest(teardown = false) {
 
         blocking {
             launch { KJect.dispose() }
-            assertThrows<NotInitializeException> { KJect.create<Instance>() }
+            assertThrows<NotInitializedException> { KJect.create<Instance>() }
         }
     }
 
