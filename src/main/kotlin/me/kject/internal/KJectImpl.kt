@@ -30,13 +30,6 @@ internal object KJectImpl {
     val context: String
         get() = _context ?: throw NotInitializedException()
 
-    fun getContextValue(context: String): Int {
-        if (context == this.context) return 2
-        if (context == "*") return 1
-
-        return 0
-    }
-
     suspend fun launch(scope: CoroutineScope, context: String) {
         mutex.withLock {
             if (!disposed || _scope != null || _context != null) throw AlreadyInitializedException()

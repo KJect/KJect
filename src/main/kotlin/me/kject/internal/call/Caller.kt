@@ -11,6 +11,7 @@ import me.kject.exception.call.CallFailedException
 import me.kject.exception.call.MultipleWithsException
 import me.kject.internal.KJectImpl
 import me.kject.internal.Registry
+import me.kject.internal.context.Context
 import java.lang.reflect.InvocationTargetException
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.reflect.KClass
@@ -39,29 +40,16 @@ object Caller {
                 throw BadParameterException(parameter, function)
         }
 
-        var tactic: With.Tactic? = null
-        var directTactic = false
-        for (with in function.findAnnotations<With>()) {
-            val value = KJectImpl.getContextValue(with.context)
-
-            if (value == 2) {
-                if (directTactic) throw MultipleWithsException(function)
-
-                tactic = with.tactic
-                directTactic = true
-            }
-
-            if (value == 1 && !directTactic) {
-                if (tactic != null) throw MultipleWithsException(function)
-                tactic = with.tactic
-            }
-        }
+        val tactic = Context.getBestMatch(
+            function.findAnnotations<With>(),
+            { it?.context },
+            { null },
+            { throw MultipleWithsException(function) },
+        )?.tactic ?: With.Tactic.JOIN
 
         function.isAccessible = true
 
-        if (tactic == null) tactic = With.Tactic.JOIN
         val deferred = CompletableDeferred<T>()
-
         val job = KJectImpl.scope.launch(
             when (tactic) {
                 With.Tactic.JOIN, With.Tactic.LAUNCH -> EmptyCoroutineContext
