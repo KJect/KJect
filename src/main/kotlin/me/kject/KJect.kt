@@ -26,7 +26,7 @@ object KJect {
      *
      * Different context can be used to define witch annotations should be used.
      *
-     * The [scope] is used to start jobs for calling functions with different [me.kject.annotation.With.Tactic]s.
+     * The [scope] is used to start jobs for calling functions with different [Tactic][me.kject.annotation.With.Tactic]s.
      * The [scope] **must not be canceled**, until KJect is disposed.
      *
      * @throws AlreadyInitializeException If KJect is already initialized.
@@ -92,7 +92,7 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      */
@@ -116,7 +116,7 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      *
@@ -165,7 +165,7 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      */
@@ -189,7 +189,7 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
      * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
      * @throws CallFailedException If the call to the constructor or the initialize function fails.
      *
@@ -232,7 +232,7 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor].
      * @throws MultipleFacadesException If multiple facades are found on any type.
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [me.kject.annotation.With] annotations are found on a function.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
      *
      * @see getOrCreate
      */
