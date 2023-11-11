@@ -49,15 +49,15 @@ object Caller {
 
         function.isAccessible = true
 
+        val context = when (tactic) {
+            With.Tactic.JOIN, With.Tactic.LAUNCH -> EmptyCoroutineContext
+            With.Tactic.DEFAULT -> Dispatchers.Default
+            With.Tactic.UNCONFINED -> Dispatchers.Unconfined
+            With.Tactic.IO -> Dispatchers.IO
+        }
+
         val deferred = CompletableDeferred<T>()
-        val job = KJectImpl.scope.launch(
-            when (tactic) {
-                With.Tactic.JOIN, With.Tactic.LAUNCH -> EmptyCoroutineContext
-                With.Tactic.DEFAULT -> Dispatchers.Default
-                With.Tactic.UNCONFINED -> Dispatchers.Unconfined
-                With.Tactic.IO -> Dispatchers.IO
-            },
-        ) {
+        val job = KJectImpl.scope.launch(context) {
             try {
                 val result = function.callSuspendBy(parameterMap)
                 deferred.complete(result)
