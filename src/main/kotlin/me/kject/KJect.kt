@@ -93,8 +93,8 @@ object KJect {
      * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
      * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
-     * @throws CallFailedException If the call to the constructor or the initialize function fails.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
      */
     @Throws(
         NotInitializedException::class,
@@ -117,8 +117,8 @@ object KJect {
      * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
      * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
-     * @throws CallFailedException If the call to the constructor or the initialize function fails.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
      *
      * @see getOrCreate
      */
@@ -166,8 +166,8 @@ object KJect {
      * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
      * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
-     * @throws CallFailedException If the call to the constructor or the initialize function fails.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
      */
     @Throws(
         NotInitializedException::class,
@@ -190,8 +190,8 @@ object KJect {
      * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
      * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or the initialize function is canceled.
-     * @throws CallFailedException If the call to the constructor or the initialize function fails.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
      *
      * @see create
      */
@@ -233,6 +233,8 @@ object KJect {
      * @throws MultipleFacadesException If multiple facades are found on any type.
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
      * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
+     * @throws CallCanceledException If the call to the function is canceled and the function has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN].
+     * @throws CallFailedException If the call to the function fails and the function has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN].
      *
      * @see getOrCreate
      */
@@ -244,6 +246,8 @@ object KJect {
         MultipleFacadesException::class,
         BadParameterException::class,
         MultipleWithsException::class,
+        CallCanceledException::class,
+        CallFailedException::class,
     )
     suspend fun <T> call(function: KFunction<T>, builder: CallBuilder<T>.() -> Unit = {}): Deferred<T> =
         KJectImpl.call(function, builder)
