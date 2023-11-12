@@ -3,8 +3,6 @@ description: Report a bug to help us improve KJect
 labels:
   - Status ✨ New
   - Type 🐛 Bug
-assignees:
-  - CheeseTastisch
 body:
   - type: markdown
     attributes:
