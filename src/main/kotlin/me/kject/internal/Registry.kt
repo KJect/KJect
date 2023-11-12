@@ -66,7 +66,9 @@ internal object Registry {
                 if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue
 
                 @Suppress("DeferredResultUnused")
-                Caller.call(function, {}, traceBuilder)
+                Caller.call(function, {
+                    this.instance = it
+                }, traceBuilder)
             }
 
             Registry += it
