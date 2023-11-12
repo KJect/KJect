@@ -84,7 +84,6 @@ internal object Registry {
 
         traceBuilder.through(RequestType.CONSTRUCTOR)
         val instance = Caller.call(constructor, {}, traceBuilder).await()
-        this += instance
 
         traceBuilder.through(RequestType.INITIALIZE)
         for (function in type.functions) {
