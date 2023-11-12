@@ -60,8 +60,6 @@ internal object Registry {
         }
 
         type.objectInstance?.let {
-            Registry += it
-
             traceBuilder.through(RequestType.INITIALIZE)
             for (function in type.functions) {
                 val annotation = function.findAnnotation<Initialize>() ?: continue
@@ -71,6 +69,7 @@ internal object Registry {
                 Caller.call(function, {}, traceBuilder)
             }
 
+            Registry += it
             -traceBuilder
             return it
         }
