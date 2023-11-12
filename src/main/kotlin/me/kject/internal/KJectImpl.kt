@@ -55,12 +55,16 @@ internal object KJectImpl {
 
             scope.coroutineContext.cancelChildren()
 
-            Registry.disposeInstances()
+            try {
+                Registry.disposeInstances()
+            } finally {
+                Registry.clear()
 
-            scope.cancel()
+                scope.cancel()
 
-            _scope = null
-            _context = null
+                _scope = null
+                _context = null
+            }
         }
     }
 

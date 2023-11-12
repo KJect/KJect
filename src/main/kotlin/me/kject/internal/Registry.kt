@@ -115,8 +115,6 @@ internal object Registry {
                     }
                 }
 
-                done += instance
-
                 function@ for (function in instance::class.functions) {
                     val annotation = function.findAnnotation<Dispose>() ?: continue@function
                     if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue@function
@@ -125,17 +123,23 @@ internal object Registry {
                     try {
                         Caller.call(function, {
                             this.instance = instance
-                        }, DependencyTraceBuilder.create())
+                        }, DependencyTraceBuilder.create()).await()
                     } catch (e: CallFailedException) {
-                        throw DisposeFailedException(instances)
+                        throw DisposeFailedException(instances.toList())
                     }
                 }
+
+                done += instance
             }
 
             instances.removeAll(done)
 
-            if (before == instances.size) throw DisposeFailedException(instances)
+            if (before == instances.size) throw DisposeFailedException(instances.toList())
         }
+    }
+
+    fun clear() {
+        instances.clear()
     }
 
 }
