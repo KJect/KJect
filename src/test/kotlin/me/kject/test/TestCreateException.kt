@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Order
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
-class TestCreateException : KJectTest(teardown = false) {
+class TestCreateException : KJectTest() {
+
+    override val teardown = false
 
     @Test
     @Order(1)

@@ -8,11 +8,11 @@ import org.junit.jupiter.api.TestMethodOrder
 import kotlin.test.Test
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-open class KJectTest(
-    private val context: String = "production",
-    private val setup: Boolean = true,
-    private val teardown: Boolean = true
-) {
+open class KJectTest {
+
+    open val context: String = "production"
+    open  val setup: Boolean = true
+    open  val teardown: Boolean = true
 
     @Test
     @Order(Int.MIN_VALUE)
@@ -25,9 +25,10 @@ open class KJectTest(
     fun teardown() {
         try {
             blocking {
-                    if (teardown) KJect.dispose()
+                if (teardown) KJect.dispose()
             }
-        } catch (_: CancellationException) {}
+        } catch (_: CancellationException) {
+        }
     }
 
 

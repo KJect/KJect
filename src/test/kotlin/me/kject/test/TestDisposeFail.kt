@@ -9,7 +9,9 @@ import me.kject.util.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestDisposeFail : KJectTest(teardown = false) {
+class TestDisposeFail : KJectTest() {
+
+    override val teardown = false
 
     @Test
     fun testDisposeFail() {

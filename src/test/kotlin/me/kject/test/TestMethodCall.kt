@@ -20,7 +20,9 @@ import org.junit.jupiter.api.Order
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestMethodCall : KJectTest(teardown = false) {
+class TestMethodCall : KJectTest() {
+
+    override val teardown = false
 
     @Test
     @Order(1)
@@ -28,8 +30,8 @@ class TestMethodCall : KJectTest(teardown = false) {
         assertEquals(true, blocking { KJect.call(::methodA).await() })
         assert(blocking { KJect.call(::methodB).await().startsWith("DefaultDispatcher-worker-1 @KJect") })
         assert(blocking { KJect.call(::methodC).await().startsWith("Test worker @KJect") })
-        println(blocking { KJect.call(::methodD).await().startsWith("kotlinx.coroutines.DefaultExecutor @KJect") })
-        println(blocking { KJect.call(::methodE).await().startsWith("DefaultDispatcher-worker-1 @KJect") })
+        assert(blocking { KJect.call(::methodD).await().startsWith("kotlinx.coroutines.DefaultExecutor @KJect") })
+        assert(blocking { KJect.call(::methodE).await().startsWith("DefaultDispatcher-worker-1 @KJect") })
     }
 
     @Test

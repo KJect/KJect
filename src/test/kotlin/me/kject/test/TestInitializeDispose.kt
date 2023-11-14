@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class TestInitializeDispose : KJectTest(teardown = false) {
+class TestInitializeDispose : KJectTest() {
+
+    override val teardown = false
 
     companion object {
 

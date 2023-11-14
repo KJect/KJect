@@ -10,7 +10,10 @@ import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class TestContext : KJectTest(setup = false, teardown = false) {
+class TestContext : KJectTest() {
+
+    override val setup = false
+    override val teardown = false
 
     @Test
     @Order(1)
