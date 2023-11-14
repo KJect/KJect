@@ -1,5 +1,6 @@
 package me.kject.annotation
 
+
 /**
  * Informs KJect witch [dispatcher] to use when calling a suspending function.
  *
@@ -25,17 +26,17 @@ annotation class On(val dispatcher: Dispatcher, val context: String = "*") {
     enum class Dispatcher {
 
         /**
-         * Launches a new coroutine without any specific dispatcher.
+         * Uses a coroutine without any specific dispatcher ([EmptyCoroutineContext][kotlin.coroutines.EmptyCoroutineContext]).
          */
         EMPTY,
 
         /**
-         * Launches a new coroutine on the [Default][kotlinx.coroutines.Dispatchers.Default] dispatcher.
+         * Uses the [Default][kotlinx.coroutines.Dispatchers.Default] dispatcher.
          */
         DEFAULT,
 
         /**
-         * Launches a new coroutine on the [Unconfined][kotlinx.coroutines.Dispatchers.Unconfined] dispatcher.
+         * Uses the [Unconfined][kotlinx.coroutines.Dispatchers.Unconfined] dispatcher.
          *
          * This will start the coroutine on the current thread, until the first suspension point.
          * After that, the coroutine will be resumed on a new thread.
@@ -43,7 +44,7 @@ annotation class On(val dispatcher: Dispatcher, val context: String = "*") {
         UNCONFINED,
 
         /**
-         * Launches a new coroutine on the [IO][kotlinx.coroutines.Dispatchers.IO] dispatcher.
+         * Uses the [IO][kotlinx.coroutines.Dispatchers.IO] dispatcher.
          */
         IO,
 
