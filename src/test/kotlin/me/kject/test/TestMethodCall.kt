@@ -2,10 +2,9 @@ package me.kject.test
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import me.kject.KJect
 import me.kject.annotation.Inject
-import me.kject.annotation.With
+import me.kject.annotation.On
 import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
@@ -27,7 +26,10 @@ class TestMethodCall : KJectTest(teardown = false) {
     @Order(1)
     fun testWith() {
         assertEquals(true, blocking { KJect.call(::methodA).await() })
-        println(blocking { KJect.call(::methodB).await().startsWith("DefaultDispatcher-worker-1") })
+        assert(blocking { KJect.call(::methodB).await().startsWith("DefaultDispatcher-worker-1 @KJect") })
+        assert(blocking { KJect.call(::methodC).await().startsWith("Test worker @KJect") })
+        println(blocking { KJect.call(::methodD).await().startsWith("kotlinx.coroutines.DefaultExecutor @KJect") })
+        println(blocking { KJect.call(::methodE).await().startsWith("DefaultDispatcher-worker-1 @KJect") })
     }
 
     @Test
@@ -37,6 +39,9 @@ class TestMethodCall : KJectTest(teardown = false) {
             KJect.call(String::something) {
                 receiver = "Hello "
                 this["other"] = "World"
+
+                assertEquals("Hello ", receiver)
+                assertEquals("World", this["other"])
             }.await()
         })
 
@@ -44,6 +49,8 @@ class TestMethodCall : KJectTest(teardown = false) {
         assertEquals("Hello World", blocking {
             KJect.call(TestClass::test) {
                 instance = testClass
+
+                assertEquals(testClass, instance)
             }.await()
         })
     }
@@ -79,19 +86,6 @@ class TestMethodCall : KJectTest(teardown = false) {
 
 }
 
-fun main() {
-    runBlocking {
-        KJect.launch(this)
-
-        launch {
-            delay(1000)
-            KJect.dispose()
-        }
-
-        KJect.call(::wait).await()
-    }
-}
-
 private class InstanceA
 
 @Suppress("UNUSED_PARAMETER")
@@ -99,8 +93,20 @@ private fun methodA(@Inject a: InstanceA): Boolean {
     return true
 }
 
-@With(With.Tactic.IO)
+@On(On.Dispatcher.DEFAULT)
 private fun methodB() = Thread.currentThread().name
+
+@On(On.Dispatcher.UNCONFINED)
+private fun methodC() = Thread.currentThread().name
+
+@On(On.Dispatcher.UNCONFINED)
+private suspend fun methodD(): String {
+    delay(1)
+    return Thread.currentThread().name
+}
+
+@On(On.Dispatcher.IO)
+private fun methodE() = Thread.currentThread().name
 
 private fun String.something(other: String) = this + other
 
@@ -114,8 +120,8 @@ private fun test(parameter: String) = "Hello $parameter"
 
 private fun fail(): Nothing = throw Exception()
 
-@With(With.Tactic.IO)
-@With(With.Tactic.DEFAULT)
+@On(On.Dispatcher.IO)
+@On(On.Dispatcher.DEFAULT)
 private fun multipleWith() = Unit
 
 private suspend fun wait() {
