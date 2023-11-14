@@ -65,10 +65,9 @@ internal object Registry {
                 val annotation = function.findAnnotation<Initialize>() ?: continue
                 if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue
 
-                @Suppress("DeferredResultUnused")
                 Caller.call(function, {
                     this.instance = it
-                }, traceBuilder)
+                }, traceBuilder).await()
             }
 
             Registry += it
@@ -91,10 +90,9 @@ internal object Registry {
             val annotation = function.findAnnotation<Initialize>() ?: continue
             if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue
 
-            @Suppress("DeferredResultUnused")
             Caller.call(function, {
                 this.instance = instance
-            }, traceBuilder)
+            }, traceBuilder).await()
         }
         Registry += instance
 

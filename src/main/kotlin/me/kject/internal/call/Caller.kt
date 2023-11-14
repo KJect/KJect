@@ -2,7 +2,7 @@ package me.kject.internal.call
 
 import kotlinx.coroutines.*
 import me.kject.annotation.Inject
-import me.kject.annotation.With
+import me.kject.annotation.On
 import me.kject.call.CallBuilder
 import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.exception.call.BadParameterException
@@ -40,20 +40,20 @@ object Caller {
                 throw BadParameterException(parameter, function)
         }
 
-        val tactic = Context.getBestMatch(
-            function.findAnnotations<With>(),
+        val dispatcher = Context.getBestMatch(
+            function.findAnnotations<On>(),
             { it?.context },
             { null },
             { throw MultipleWithsException(function) },
-        )?.tactic ?: With.Tactic.JOIN
+        )?.dispatcher ?: On.Dispatcher.EMPTY
 
         function.isAccessible = true
 
-        val context = when (tactic) {
-            With.Tactic.JOIN, With.Tactic.LAUNCH -> EmptyCoroutineContext
-            With.Tactic.DEFAULT -> Dispatchers.Default
-            With.Tactic.UNCONFINED -> Dispatchers.Unconfined
-            With.Tactic.IO -> Dispatchers.IO
+        val context = when (dispatcher) {
+            On.Dispatcher.EMPTY -> EmptyCoroutineContext
+            On.Dispatcher.DEFAULT -> Dispatchers.Default
+            On.Dispatcher.UNCONFINED -> Dispatchers.Unconfined
+            On.Dispatcher.IO -> Dispatchers.IO
         }
 
         val deferred = CompletableDeferred<T>()
@@ -69,8 +69,6 @@ object Caller {
         job.invokeOnCompletion {
             if (it is CancellationException) deferred.completeExceptionally(CallCanceledException(function))
         }
-
-        if (tactic == With.Tactic.JOIN) deferred.await()
 
         return deferred
     }

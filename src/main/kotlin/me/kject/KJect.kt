@@ -26,7 +26,7 @@ object KJect {
      *
      * Different context can be used to define witch annotations should be used.
      *
-     * The [scope] is used to start jobs for calling functions with different [Tactic][me.kject.annotation.With.Tactic]s.
+     * The [scope] is used to start jobs for calling functions with different [Tactic][me.kject.annotation.On.Dispatcher]s.
      * The [scope] **must not be canceled**, until KJect is disposed.
      *
      * @throws AlreadyInitializedException If KJect is already initialized.
@@ -92,9 +92,9 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
-     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.On] annotations are found on a function.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] fails.
      */
     @Throws(
         NotInitializedException::class,
@@ -116,9 +116,9 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
-     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.On] annotations are found on a function.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] fails.
      *
      * @see getOrCreate
      */
@@ -157,6 +157,8 @@ object KJect {
      * of the given [type] and call it. If multiple function are annotated,
      * all of them will be called in no specific order.
      *
+     * The completion of a suspending initialize function will be awaited.
+     *
      * After that the created instance will be returned.
      *
      * @throws NotInitializedException If KJect is not initialized.
@@ -165,9 +167,9 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
-     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.On] annotations are found on a function.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] fails.
      */
     @Throws(
         NotInitializedException::class,
@@ -189,9 +191,9 @@ object KJect {
      * @throws IllegalConstructorsException If multiple constructors are annotated with [UseConstructor][me.kject.annotation.UseConstructor] or no constructor is annotated and no primary constructor exists.
      * @throws MultipleFacadesException If multiple facades are found on the given [type][T].
      * @throws BadParameterException If a parameter of the constructor or the initialize function is not found.
-     * @throws MultipleWithsException If multiple [With][me.kject.annotation.With] annotations are found on a function.
-     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] is canceled.
-     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.With.Tactic.JOIN] fails.
+     * @throws MultipleWithsException If multiple [With][me.kject.annotation.On] annotations are found on a function.
+     * @throws CallCanceledException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] is canceled.
+     * @throws CallFailedException If the call to the constructor or an initialize function that has a tactic of [Tactic.JOIN][me.kject.annotation.On.Dispatcher.JOIN] fails.
      *
      * @see create
      */
