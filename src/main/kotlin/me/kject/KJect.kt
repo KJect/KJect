@@ -103,7 +103,7 @@ object KJect {
         IllegalConstructorsException::class,
         MultipleFacadesException::class,
         BadParameterException::class,
-        MultipleWithsException::class,
+        MultipleOnException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -129,7 +129,7 @@ object KJect {
         IllegalConstructorsException::class,
         MultipleFacadesException::class,
         BadParameterException::class,
-        MultipleWithsException::class,
+        MultipleOnException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -178,7 +178,7 @@ object KJect {
         IllegalConstructorsException::class,
         MultipleFacadesException::class,
         BadParameterException::class,
-        MultipleWithsException::class,
+        MultipleOnException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -204,7 +204,7 @@ object KJect {
         IllegalConstructorsException::class,
         MultipleFacadesException::class,
         BadParameterException::class,
-        MultipleWithsException::class,
+        MultipleOnException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )
@@ -247,7 +247,7 @@ object KJect {
         IllegalConstructorsException::class,
         MultipleFacadesException::class,
         BadParameterException::class,
-        MultipleWithsException::class,
+        MultipleOnException::class,
         CallCanceledException::class,
         CallFailedException::class,
     )

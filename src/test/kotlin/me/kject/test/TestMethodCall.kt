@@ -8,7 +8,7 @@ import me.kject.annotation.On
 import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
-import me.kject.exception.call.MultipleWithsException
+import me.kject.exception.call.MultipleOnException
 import me.kject.exception.parameter.NoInstanceParameterException
 import me.kject.exception.parameter.NoReceiverParameterException
 import me.kject.exception.parameter.UnknownParameterException
@@ -63,7 +63,7 @@ class TestMethodCall : KJectTest(teardown = false) {
         assertThrows<UnknownParameterException> { KJect.call(::test) { this["a"] = "Hello" } }
         assertThrows<BadParameterException> { KJect.call(::test) }
         assertThrows<CallFailedException> { KJect.call(::fail).await() }
-        assertThrows<MultipleWithsException> { KJect.call(::multipleWith) }
+        assertThrows<MultipleOnException> { KJect.call(::multipleWith) }
     }
 
     @Test

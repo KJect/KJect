@@ -8,7 +8,7 @@ import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.exception.call.BadParameterException
 import me.kject.exception.call.CallCanceledException
 import me.kject.exception.call.CallFailedException
-import me.kject.exception.call.MultipleWithsException
+import me.kject.exception.call.MultipleOnException
 import me.kject.internal.KJectImpl
 import me.kject.internal.Registry
 import me.kject.internal.context.Context
@@ -44,7 +44,7 @@ object Caller {
             function.findAnnotations<On>(),
             { it?.context },
             { null },
-            { throw MultipleWithsException(function) },
+            { throw MultipleOnException(function) },
         )?.dispatcher ?: On.Dispatcher.EMPTY
 
         function.isAccessible = true
