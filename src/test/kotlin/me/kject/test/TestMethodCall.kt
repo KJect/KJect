@@ -59,6 +59,7 @@ class TestMethodCall : KJectTest() {
 
     @Test
     @Order(3)
+    @Suppress("DeferredResultUnused")
     fun testExceptions() {
         assertThrows<NoInstanceParameterException> { KJect.call(::test) { instance = "Hello" } }
         assertThrows<NoReceiverParameterException> { KJect.call(::test) { receiver = "Hello" } }
@@ -90,7 +91,7 @@ class TestMethodCall : KJectTest() {
 
 private class InstanceA
 
-@Suppress("UNUSED_PARAMETER")
+@Suppress("UNUSED_PARAMETER", "SameReturnValue")
 private fun methodA(@Inject a: InstanceA): Boolean {
     return true
 }

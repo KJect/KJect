@@ -18,8 +18,7 @@ internal object KJectImpl {
 
     private val mutex = Mutex()
 
-    var disposed: Boolean = true
-        private set
+    private var disposed: Boolean = true
 
     private var _scope: CoroutineScope? = null
     private var _context: String? = null

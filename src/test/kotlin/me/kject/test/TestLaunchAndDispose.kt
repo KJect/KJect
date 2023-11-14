@@ -35,7 +35,10 @@ class TestLaunchAndDispose {
         assertThrows<NotInitializedException> { KJect.getOrNull<Any>() }
         assertThrows<NotInitializedException> { KJect.getOrCreate<Any>() }
         assertThrows<NotInitializedException> { KJect.create<Any>() }
-        assertThrows<NotInitializedException> { KJect.call(::testNotInitialized) }
+        assertThrows<NotInitializedException> {
+            @Suppress("DeferredResultUnused")
+            KJect.call(::testNotInitialized)
+        }
     }
 
 }

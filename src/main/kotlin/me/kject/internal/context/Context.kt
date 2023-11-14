@@ -11,7 +11,7 @@ object Context {
         return ContextValue.NONE
     }
 
-    fun <T> getBestMatch(instances: Map<T, ContextValue>, none: () -> T, multiple: () -> T): T {
+    private fun <T> getBestMatch(instances: Map<T, ContextValue>, none: () -> T, multiple: () -> T): T {
         var current: T? = null
         var currentValue = ContextValue.NONE
 

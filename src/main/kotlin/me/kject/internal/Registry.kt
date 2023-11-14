@@ -61,14 +61,7 @@ internal object Registry {
 
         type.objectInstance?.let {
             traceBuilder.through(RequestType.INITIALIZE)
-            for (function in type.functions) {
-                val annotation = function.findAnnotation<Initialize>() ?: continue
-                if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue
-
-                Caller.call(function, {
-                    this.instance = it
-                }, traceBuilder).await()
-            }
+            callInitializer(type, it, traceBuilder)
 
             Registry += it
             -traceBuilder
@@ -86,6 +79,15 @@ internal object Registry {
         val instance = Caller.call(constructor, {}, traceBuilder).await()
 
         traceBuilder.through(RequestType.INITIALIZE)
+        callInitializer(type, instance, traceBuilder)
+
+        Registry += instance
+
+        -traceBuilder
+        return instance
+    }
+
+    private suspend fun <T : Any> callInitializer(type: KClass<T>, instance: T, traceBuilder: DependencyTraceBuilder) {
         for (function in type.functions) {
             val annotation = function.findAnnotation<Initialize>() ?: continue
             if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue
@@ -94,10 +96,6 @@ internal object Registry {
                 this.instance = instance
             }, traceBuilder).await()
         }
-        Registry += instance
-
-        -traceBuilder
-        return instance
     }
 
     suspend fun disposeInstances() {
@@ -117,7 +115,6 @@ internal object Registry {
                     val annotation = function.findAnnotation<Dispose>() ?: continue@function
                     if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue@function
 
-                    @Suppress("DeferredResultUnused")
                     try {
                         Caller.call(function, {
                             this.instance = instance

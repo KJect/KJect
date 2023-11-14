@@ -46,11 +46,10 @@ class TestCreateException : KJectTest() {
     private class MultipleConstructors {
 
         @UseConstructor
-        @Suppress("unused")
         private constructor()
 
         @UseConstructor
-        @Suppress("unused", "UNUSED_PARAMETER")
+        @Suppress("UNUSED_PARAMETER")
         private constructor(a: Int)
 
     }

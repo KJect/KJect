@@ -56,6 +56,7 @@ class TestCircularDependency : KJectTest() {
     @Test
     fun testWithMethod() {
         val exception = assertThrows<CircularDependencyException> {
+            @Suppress("DeferredResultUnused")
             KJect.call(::inject)
         }
         assertEquals(4, exception.dependencyTrace.elements.size)
@@ -79,6 +80,7 @@ class TestCircularDependency : KJectTest() {
 
     }
 
+    @Suppress("unused")
     private class Constructor {
 
         class A(@Inject val b: B)
@@ -92,8 +94,8 @@ class TestCircularDependency : KJectTest() {
         class A {
 
             @Initialize
-            fun initialize(@Inject b: B) {
-            }
+            @Suppress("EmptyMethod")
+            fun initialize(@Inject b: B) {}
 
 
         }
@@ -101,13 +103,14 @@ class TestCircularDependency : KJectTest() {
         class B {
 
             @Initialize
-            fun initialize(@Inject a: A) {
-            }
+            @Suppress("EmptyMethod")
+            fun initialize(@Inject a: A) {}
 
         }
 
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun inject(@Inject a: Annotation.A) = Unit
 
 }
