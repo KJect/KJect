@@ -5,6 +5,7 @@ import me.kject.annotation.Initialize
 import me.kject.annotation.Inject
 import me.kject.annotation.Require
 import me.kject.dependency.trace.ClassElement
+import me.kject.dependency.trace.FunctionElement
 import me.kject.dependency.trace.RequestType
 import me.kject.exception.create.CircularDependencyException
 import me.kject.util.KJectTest
@@ -52,6 +53,22 @@ class TestCircularDependency : KJectTest() {
             .forEach { assertEquals(RequestType.INITIALIZE, it.through) }
     }
 
+    @Test
+    fun testWithMethod() {
+        val exception = assertThrows<CircularDependencyException> {
+            KJect.call(::inject)
+        }
+        assertEquals(4, exception.dependencyTrace.elements.size)
+        exception.dependencyTrace.elements
+            .toMutableList()
+            .also { assertIs<FunctionElement>(it.removeFirst()) }
+            .onEach { assertIs<ClassElement>(it) }
+            .filterIsInstance<ClassElement>()
+            .toMutableList()
+            .also { assertNull(it.removeFirst().through) }
+            .forEach { assertEquals(RequestType.REQUIRE, it.through) }
+    }
+
     private class Annotation {
 
         @Require(B::class)
@@ -75,7 +92,8 @@ class TestCircularDependency : KJectTest() {
         class A {
 
             @Initialize
-            fun initialize(@Inject b: B) {}
+            fun initialize(@Inject b: B) {
+            }
 
 
         }
@@ -83,10 +101,13 @@ class TestCircularDependency : KJectTest() {
         class B {
 
             @Initialize
-            fun initialize(@Inject a: A) {}
+            fun initialize(@Inject a: A) {
+            }
 
         }
 
     }
+
+    private fun inject(@Inject a: Annotation.A) = Unit
 
 }
