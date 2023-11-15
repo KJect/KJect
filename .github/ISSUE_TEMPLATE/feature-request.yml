@@ -3,8 +3,6 @@ description: Suggest a feature for KJect
 labels:
   - Status ✨ New
   - Type 🚀 Feature
-assignees:
-  - CheeseTastisch
 body:
   - type: markdown
     attributes:
