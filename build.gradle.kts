@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `maven-publish`
     kotlin("jvm") version "1.9.20"
 }
 
@@ -8,6 +9,7 @@ version = "1.0-alpha-1"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
