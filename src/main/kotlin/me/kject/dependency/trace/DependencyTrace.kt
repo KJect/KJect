@@ -15,11 +15,6 @@ interface DependencyTrace {
     val elements: List<DependencyTraceElement>
 
     /**
-     * This [DependencyTrace] as a string.
-     */
-    override fun toString(): String
-
-    /**
      * This [DependencyTrace] as a string,
      * where each [DependencyTraceElement] that contains the given [duplicate] class is marked.
      */

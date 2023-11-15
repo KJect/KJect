@@ -52,12 +52,13 @@ dependencies {
 ```
 
 ### 2. Initialize KJect
-To initialize KJect, call `KJect.create()`:
+To initialize KJect, call `KJect.launch()`:
 ```kotlin
-KJect.create()
+KJect.launch(coroutineScope)
 ```
 
 After that you can start using all features of KJect.
+The `coroutineScope` parameter must be a coroutine scope, that stays alive as long as you want to use KJect.
 
 ### 3. Use KJect
 #### Create a class
@@ -90,3 +91,9 @@ KJect.call(::testFunction)
 ```
 
 A more detailed documentation on how KJect works, will be available soon.
+
+### 4. Dispose KJect
+To dispose KJect, call `KJect.dispose()`:
+```kotlin
+KJect.dispose()
+```

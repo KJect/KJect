@@ -1,21 +1,24 @@
 package me.kject.internal
 
-import me.kject.annotation.Facade
-import me.kject.annotation.Require
-import me.kject.annotation.UseConstructor
+import me.kject.annotation.*
 import me.kject.dependency.trace.DependencyTraceBuilder
 import me.kject.dependency.trace.RequestType
+import me.kject.exception.DisposeFailedException
+import me.kject.exception.call.CallFailedException
 import me.kject.exception.create.CircularDependencyException
+import me.kject.exception.create.IllegalConstructorsException
 import me.kject.exception.create.IllegalFacadeException
-import me.kject.exception.create.MultipleConstructorsException
-import me.kject.exception.create.NoConstructorException
+import me.kject.exception.create.MultipleFacadesException
 import me.kject.internal.call.Caller
-import java.util.Collections
+import me.kject.internal.context.Context
+import me.kject.internal.context.ContextValue
+import java.util.*
 import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
 import kotlin.reflect.full.*
 
 internal object Registry {
+
+    var allowCreate = false
 
     private val instances = Collections.synchronizedList(mutableListOf<Any>())
 
@@ -38,96 +41,100 @@ internal object Registry {
 
         traceBuilder += type
 
-        var usedFacade: Facade? = null
-        var directFacade = false
+        val facade = Context.getBestMatch(
+            type.findAnnotations<Facade>(),
+            { it?.context },
+            { null },
+            { throw MultipleFacadesException(type) },
+        )
 
-        for (facade in type.findAnnotations<Facade>()) {
-            val value = KJectImpl.getContextValue(facade.context)
-            if (value == 0) continue
-            if (value == 2) {
-                if (directFacade) TODO("Throw correct exception")
-
-                usedFacade = facade
-                directFacade = true
-            }
-
-            if (value == 1 && !directFacade) {
-                if (usedFacade != null) TODO("Throw correct exception")
-                usedFacade = facade
-            }
-        }
-
-        usedFacade?.let {
+        facade?.let {
             if (!it.building.isSubclassOf(type)) throw IllegalFacadeException(it.building, type)
             return type.cast(create(it.building, traceBuilder))
         }
 
         traceBuilder.through(RequestType.REQUIRE)
         for (require in type.findAnnotations<Require>()) {
-            if (KJectImpl.getContextValue(require.context) == 0) continue
+            if (Context.getContextValue(require.context) == ContextValue.NONE) continue
             if (require.required !in Registry) create(require.required, traceBuilder)
         }
 
         type.objectInstance?.let {
-            Registry += it
-
             traceBuilder.through(RequestType.INITIALIZE)
-            for (function in type.functions) {
-                val annotation = function.findAnnotation<Require>() ?: continue
-                if (KJectImpl.getContextValue(annotation.context) == 0) continue
+            callInitializer(type, it, traceBuilder)
 
-                @Suppress("DeferredResultUnused")
-                Caller.call(function, {}, traceBuilder)
-            }
-
+            Registry += it
             -traceBuilder
             return it
         }
 
-        var useConstructor: KFunction<T>? = null
-        var directConstructor = false
-
-        for (constructor in type.constructors) {
-            val annotation = constructor.findAnnotation<UseConstructor>() ?: continue
-            val value = KJectImpl.getContextValue(annotation.context)
-
-            if (value == 0) continue
-            if (value == 2) {
-                if (directConstructor) throw MultipleConstructorsException(type)
-
-                useConstructor = constructor
-                directConstructor = true
-            }
-
-            if (value == 1 && !directConstructor) {
-                if (useConstructor != null) throw MultipleConstructorsException(type)
-                useConstructor = constructor
-            }
-        }
-
-        if (useConstructor == null) useConstructor = type.primaryConstructor ?: throw NoConstructorException(type)
+        val constructor = Context.getBestMatch(
+            type.constructors,
+            { it.findAnnotation<UseConstructor>()?.context },
+            { type.primaryConstructor ?: throw IllegalConstructorsException(type) },
+            { throw IllegalConstructorsException(type) },
+        )
 
         traceBuilder.through(RequestType.CONSTRUCTOR)
-        val instance = Caller.call(useConstructor, {}, traceBuilder).await()
-        Registry += instance
+        val instance = Caller.call(constructor, {}, traceBuilder).await()
 
         traceBuilder.through(RequestType.INITIALIZE)
-        for (function in type.functions) {
-            val annotation = function.findAnnotation<Require>() ?: continue
-            if (KJectImpl.getContextValue(annotation.context) == 0) continue
+        callInitializer(type, instance, traceBuilder)
 
-            @Suppress("DeferredResultUnused")
-            Caller.call(function, {
-                this.instance = instance
-            }, traceBuilder)
-        }
+        Registry += instance
 
         -traceBuilder
         return instance
     }
 
+    private suspend fun <T : Any> callInitializer(type: KClass<T>, instance: T, traceBuilder: DependencyTraceBuilder) {
+        for (function in type.functions) {
+            val annotation = function.findAnnotation<Initialize>() ?: continue
+            if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue
+
+            Caller.call(function, {
+                this.instance = instance
+            }, traceBuilder).await()
+        }
+    }
+
     suspend fun disposeInstances() {
-        TODO()
+        var before: Int
+        val done = mutableSetOf<Any>()
+        while (instances.isNotEmpty()) {
+            before = instances.size
+
+            instance@ for (instance in instances) {
+                for (other in instances) {
+                    for (require in other::class.findAnnotations<Require>()) {
+                        if (get(require.required) == instance) continue@instance
+                    }
+                }
+
+                function@ for (function in instance::class.functions) {
+                    val annotation = function.findAnnotation<Dispose>() ?: continue@function
+                    if (Context.getContextValue(annotation.context) == ContextValue.NONE) continue@function
+
+                    try {
+                        Caller.call(function, {
+                            this.instance = instance
+                        }, DependencyTraceBuilder.create()).await()
+                    } catch (e: CallFailedException) {
+                        throw DisposeFailedException(instances.toList())
+                    }
+                }
+
+                done += instance
+            }
+
+            instances.removeAll(done)
+
+            if (before == instances.size) throw DisposeFailedException(instances.toList())
+        }
+    }
+
+    fun clear() {
+        instances.clear()
     }
 
 }

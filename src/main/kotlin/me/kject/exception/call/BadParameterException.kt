@@ -7,6 +7,5 @@ import kotlin.reflect.KParameter
 /**
  * An exception that is thrown when the given [parameter] of the given [function] can't be set.
  */
-@Suppress("MemberVisibilityCanBePrivate")
 class BadParameterException(val parameter: KParameter, val function: KFunction<*>) :
     KJectException("Could not set $parameter off $function")

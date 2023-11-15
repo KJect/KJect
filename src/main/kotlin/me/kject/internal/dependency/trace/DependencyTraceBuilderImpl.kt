@@ -9,7 +9,8 @@ internal class DependencyTraceBuilderImpl : DependencyTraceBuilder {
 
     override val elements = mutableListOf<DependencyTraceElement>()
 
-    override val classes = elements.filterIsInstance<ClassElement>().map { it.klass }
+    override val classes
+        get() = elements.filterIsInstance<ClassElement>().map { it.klass }
 
     override infix fun through(requestType: RequestType) {
         through = requestType
