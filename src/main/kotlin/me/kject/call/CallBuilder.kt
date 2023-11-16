@@ -17,6 +17,11 @@ interface CallBuilder<T> {
     val function: KFunction<T>
 
     /**
+     * The parameters available for this function.
+     */
+    val parameters: List<KParameter>
+
+    /**
      * The current value of the instance parameter.
      *
      * @throws NoInstanceParameterException If the function doesn't have an instance parameter.

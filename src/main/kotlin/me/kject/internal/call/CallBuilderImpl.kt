@@ -12,7 +12,11 @@ import kotlin.reflect.full.instanceParameter
 
 class CallBuilderImpl<T>(override val function: KFunction<T>) : CallBuilder<T> {
 
-    private val parameters = mutableMapOf<KParameter, Any?>()
+    private val declaredParameters = mutableMapOf<KParameter, Any?>()
+
+    override val parameters: List<KParameter>
+        get() = function.parameters
+
     override var instance: Any?
         get() = this[function.instanceParameter ?: throw NoInstanceParameterException(function)]
         set(value) {
@@ -25,18 +29,18 @@ class CallBuilderImpl<T>(override val function: KFunction<T>) : CallBuilder<T> {
         }
 
     override fun set(parameter: KParameter, value: Any?) {
-        parameters[parameter] = value
+        declaredParameters[parameter] = value
     }
 
     override fun set(name: String, value: Any?) {
-        parameters[function.findParameterByName(name) ?: throw UnknownParameterException(function, name)] = value
+        declaredParameters[function.findParameterByName(name) ?: throw UnknownParameterException(function, name)] = value
     }
 
-    override fun get(parameter: KParameter) = parameters[parameter]
+    override fun get(parameter: KParameter) = declaredParameters[parameter]
 
     override fun get(name: String) =
-        parameters[function.findParameterByName(name) ?: throw UnknownParameterException(function, name)]
+        declaredParameters[function.findParameterByName(name) ?: throw UnknownParameterException(function, name)]
 
-    fun getParameters(): Map<KParameter, Any?> = parameters
+    fun getParameters(): Map<KParameter, Any?> = declaredParameters
 
 }
