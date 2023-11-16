@@ -1,1 +1,5 @@
 blank_issues_enabled: true
+contact_links:
+  - name: KJect Documentation
+    url: https://github.com/KJect/kject.github.io/issues/new/choose
+    about: Please create issues regarding the documentation here.
