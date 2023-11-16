@@ -36,7 +36,7 @@ body:
       label: Checklist
       description: Pleas check the following boxes if you have done the following.
       options:
-        - label: I have search for [pull requests](https://github.com/CheeseTastisch/KJect/pulls) that implement this feature.
+        - label: I have search for [pull requests](https://github.com/KJect/KJect/pulls) that implement this feature.
           required: true
-        - label: I have searched for [issues](https://github.com/CheeseTastisch/KJect/issues) that already request this feature.
+        - label: I have searched for [issues](https://github.com/KJect/KJect/issues) that already request this feature.
           required: true
