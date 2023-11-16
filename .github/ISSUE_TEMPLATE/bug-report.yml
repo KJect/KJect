@@ -54,7 +54,7 @@ body:
       options:
         - label: I have checked the documentation and checked that my issue is not expected behavior.
           required: true
-        - label: I have search for [pull requests](https://github.com/CheeseTastisch/KJect/pulls) that might fix this issue.
+        - label: I have search for [pull requests](https://github.com/KJect/KJect/pulls) that might fix this issue.
           required: true
-        - label: I have searched for [issues](https://github.com/CheeseTastisch/KJect/issues) that already describe this bug.
+        - label: I have searched for [issues](https://github.com/KJect/KJect/issues) that already describe this bug.
           required: true
